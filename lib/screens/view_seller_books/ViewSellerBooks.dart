@@ -21,7 +21,7 @@ class _ViewSellerBooksState extends State<ViewSellerBooks> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All books to be sold'),
+        title: Text('All books'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: (title != "" && title != null || uid != "" && uid != null)
