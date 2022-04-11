@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:x_book_app/models/user.dart';
-import 'package:x_book_app/screens/authentication/authenticate.dart';
+import 'package:x_book_app/screens/Splashscreen/splashscreen.dart';
 import 'package:x_book_app/screens/home/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:x_book_app/services/auth.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           );
         } else {
           return const MaterialApp(
-          home: Authenticate(),
+          home: SplashScreen(),
           );
         }
       },
