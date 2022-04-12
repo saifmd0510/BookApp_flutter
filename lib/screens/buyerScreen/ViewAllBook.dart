@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import '../../models/BookModel.dart';
 import 'BookDetails.dart';
 
@@ -12,9 +13,10 @@ class CloudFirestoreSearch extends StatefulWidget {
 
 class _CloudFirestoreSearchState extends State<CloudFirestoreSearch> {
   String title = "";
-
+  bool isGrid = true;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       appBar: AppBar(
         title: Card(
@@ -41,7 +43,13 @@ class _CloudFirestoreSearchState extends State<CloudFirestoreSearch> {
           builder: (context, snapshot) {
             return (snapshot.connectionState == ConnectionState.waiting)
                 ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
+                : GridView.builder(
+                padding: const EdgeInsets.all(10),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 2 / 3,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) =>
                     buildBookCard(context, snapshot.data!.docs[index]));
@@ -50,7 +58,8 @@ class _CloudFirestoreSearchState extends State<CloudFirestoreSearch> {
   }
 
   @override
-  Widget buildBookCard(BuildContext context, DocumentSnapshot document) {
+  Widget buildBookCard(BuildContext context, DocumentSnapshot document)
+  {
     final books = Books.fromSnapshot(document);
     // body:StreamBuilder<QuerySnapshot>(
     //     stream: (title != "" && title != null)
@@ -68,29 +77,37 @@ class _CloudFirestoreSearchState extends State<CloudFirestoreSearch> {
     //           DocumentSnapshot data = snapshot.data!.docs[index];
     return Container(
       padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        children: [
-          ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BookDetails(books: books)),
-              );
-            },
-            title: Text(books.title,
-             style: const TextStyle(
-               fontSize: 20, fontWeight: FontWeight.bold)),
-               trailing: const Icon(
-               Icons.shopping_basket,
-               color: Colors.red,
-               size: 60,
-             ),
+      child: GridTile(
+        key: ValueKey(books.title),
+        child: InkResponse(
+          enableFeedback: true,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookDetails(books: books)
+              ),
+            );
+          },
+          child: Image.network(
+            'https://www.iconsdb.com/icons/preview/navy-blue/book-xxl.png',
+            fit: BoxFit.cover,
           ),
-          const Divider(
-            thickness: 2,
-          )
-        ],
+          //     style: const TextStyle(
+          //         fontSize: 20, fontWeight: FontWeight.bold)),
+          // trailing: const Icon(
+          //   Icons.shopping_basket,
+          //   color: Colors.red,
+          //   size: 60,
+          // ),
+        ),
+        footer: GridTileBar(
+            backgroundColor: Colors.black54,
+            title: Text(books.title,
+              style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold),
+            )
+        ),
       ),
     );
   }
